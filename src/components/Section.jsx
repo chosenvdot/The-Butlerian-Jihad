@@ -4,7 +4,7 @@ import Footer from './Footer'
 
 // Section shell — sticky nav, a masthead row (accent dot + kicker + serif title
 // + right-aligned intro), the section body, then the footer.
-export default function Section({ accent, kicker, title, intro, active, onHome, onEnter, children, H = HOUSE }) {
+export default function Section({ accent, kicker, kickerStyle, title, intro, active, onHome, onEnter, children, H = HOUSE }) {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: H.paper }}>
       <Nav active={active} onHome={onHome} onEnter={onEnter} />
@@ -15,7 +15,7 @@ export default function Section({ accent, kicker, title, intro, active, onHome, 
         <div className="vb-rise">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 9 }}>
             <span style={{ width: 11, height: 11, borderRadius: 11, background: accent }} />
-            <span style={{ fontFamily: H.mono, fontSize: 11, letterSpacing: '0.14em', color: H.mocha }}>{kicker}</span>
+            <span style={{ fontFamily: H.mono, fontSize: 11, letterSpacing: '0.14em', color: H.mocha, ...kickerStyle }}>{kicker}</span>
           </div>
           <h2 style={{ fontFamily: H.serif, fontSize: 52, fontWeight: 500, letterSpacing: '-0.015em', color: H.ink, margin: 0 }}>{title}</h2>
         </div>

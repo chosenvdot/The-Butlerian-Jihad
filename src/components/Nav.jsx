@@ -14,7 +14,10 @@ export default function Nav({ active, onHome, onEnter, H = HOUSE }) {
       <button onClick={onHome} aria-label="Victor Brasil — home" className="vb-home"
         style={{ display: 'flex', alignItems: 'center', gap: 11, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
         <Pops h={14} w={3} />
-        <span style={{ fontFamily: H.mono, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.16em', color: H.ink }}>VICTOR BRASIL</span>
+        <span className="vb-brand-cycle" aria-hidden="true">
+          <span className="vb-brand-name">VICTOR BRASIL</span>
+          <span className="vb-brand-avorant">AVORANT</span>
+        </span>
       </button>
       <span className="vb-navlinks" style={{ display: 'flex', gap: 24, fontFamily: H.mono, fontSize: 11.5, letterSpacing: '0.04em', alignItems: 'center' }}>
         {ITEMS.map(it => {

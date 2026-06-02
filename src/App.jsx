@@ -14,7 +14,13 @@ const SECTION_META = {
   photography: { accent: H.apple[0], kicker: 'GALLERY', title: 'Photography', intro: 'Albums and recent frames from the edges of the map. Full-resolution RAW available per frame.' },
   engineering: { accent: H.apple[5], kicker: 'CURRICULUM', title: 'Engineering', intro: 'Fifteen years of distributed systems. Click a role to expand. PDF available.' },
   journal: { accent: H.apple[2], kicker: 'WRITING', title: 'Journal', intro: 'Field notes and engineering essays. The throughline is patience.' },
-  contact: { accent: H.apple[4], kicker: 'SAY HELLO', title: 'Contact', intro: 'For commissions, prints, or engineering work — the inbox is open.' },
+  contact: {
+    accent: H.apple[4],
+    kicker: 'print("Hello, World!")',
+    kickerStyle: { color: '#3b2618', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'none' },
+    title: 'Contact',
+    intro: 'For commissions, prints, or engineering work — the inbox is open.',
+  },
 }
 
 export default function App() {
@@ -45,7 +51,7 @@ export default function App() {
   }[view]
 
   return (
-    <Section key={view} accent={meta.accent} kicker={meta.kicker} title={meta.title} intro={meta.intro}
+    <Section key={view} accent={meta.accent} kicker={meta.kicker} kickerStyle={meta.kickerStyle} title={meta.title} intro={meta.intro}
       active={view} onHome={goHome} onEnter={enter}>
       {body}
     </Section>

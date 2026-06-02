@@ -1,5 +1,5 @@
 import { HOUSE } from '../tokens'
-import { VBDATA, CONTACT_EMAIL } from '../data'
+import { VBDATA, CONTACT_EMAIL, LOCATION } from '../data'
 
 // Contact — big mailto link + hairline list of socials.
 export default function Contact({ H = HOUSE, D = VBDATA }) {
@@ -16,7 +16,7 @@ export default function Contact({ H = HOUSE, D = VBDATA }) {
           </a>
         ))}
       </div>
-      <p style={{ fontFamily: H.mono, fontSize: 11, color: H.muted, marginTop: 24, letterSpacing: '0.04em' }}>BASED IN FRANKFURT · AVAILABLE WORLDWIDE</p>
+      <p style={{ fontFamily: H.mono, fontSize: 11, color: H.muted, marginTop: 24, letterSpacing: '0.04em' }}>BASED IN {LOCATION.toUpperCase()} · AVAILABLE WORLDWIDE</p>
     </div>
   )
 }

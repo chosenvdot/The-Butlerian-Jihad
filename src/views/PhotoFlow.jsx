@@ -23,7 +23,7 @@ export default function PhotoFlow({ nav, setNav, H = HOUSE, D = VBDATA }) {
   // ---------------- HUB ----------------
   if (nav === 'hub') {
     const Pane = ({ title, sub, onAll, children, delay = 0 }) => (
-      <div className="vb-rise" style={{ display: 'flex', flexDirection: 'column', border: `1px solid ${H.line}`, borderRadius: 8, background: '#f5efe1', animationDelay: delay + 's' }}>
+      <div className="vb-pane vb-rise" style={{ display: 'flex', flexDirection: 'column', border: `1px solid ${H.line}`, borderRadius: 8, background: '#f5efe1', animationDelay: delay + 's' }}>
         <div style={{ height: 3, background: green, borderRadius: '8px 8px 0 0' }} />
         <button onClick={onAll} className="vb-panehead"
           style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '18px 22px 16px', border: 'none', borderBottom: `1px solid ${H.line}`, background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
@@ -37,7 +37,7 @@ export default function PhotoFlow({ nav, setNav, H = HOUSE, D = VBDATA }) {
       </div>
     )
     return (
-      <div className="vb-twopane" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 26, alignItems: 'start' }}>
+      <div className="vb-twopane" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 26, alignItems: 'stretch' }}>
         <Pane title="Recents" sub="EVERYTHING · NEWEST FIRST" onAll={() => setNav('recents')} delay={0}>
           <div className="vb-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 6 }}>
             {recents.slice(0, 12).map((p, i) => (
@@ -50,10 +50,12 @@ export default function PhotoFlow({ nav, setNav, H = HOUSE, D = VBDATA }) {
         <Pane title="Albums" sub="BY COLLECTION" onAll={() => setNav('albums')} delay={0.1}>
           <div className="vb-grid2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
             {albumsSorted.slice(0, 6).map((a, i) => (
-              <button key={a.id} onClick={() => setNav('album:' + a.id)} className="vb-album vb-rise" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left', animationDelay: (0.32 + i * 0.05) + 's' }}>
+              <button key={a.id} onClick={() => setNav('album:' + a.id)} className="vb-album vb-fade" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left', animationDelay: (0.32 + i * 0.05) + 's' }}>
                 <div className="vb-cover" style={{ aspectRatio: '4/3', borderRadius: 5, overflow: 'hidden' }}><Ph label={cover(a)[0]} meta="" ticks={false} /></div>
-                <div style={{ fontFamily: H.serif, fontSize: 17, fontWeight: 500, color: H.ink, marginTop: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</div>
-                <div style={{ fontFamily: H.mono, fontSize: 9.5, color: H.muted, marginTop: 2 }}>{a.photos.length} · UPD {updated(a)}</div>
+                <div className="vb-album-copy vb-album-copy-sm">
+                  <div style={{ fontFamily: H.serif, fontSize: 17, fontWeight: 500, color: H.ink, marginTop: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</div>
+                  <div style={{ fontFamily: H.mono, fontSize: 9.5, fontWeight: 700, color: H.muted, marginTop: 2, paddingLeft: 3 }}>{a.photos.length} · Updated {updated(a)}</div>
+                </div>
               </button>
             ))}
           </div>
@@ -86,14 +88,16 @@ export default function PhotoFlow({ nav, setNav, H = HOUSE, D = VBDATA }) {
         <Crumb to="hub" label="PHOTOGRAPHY" current="ALBUMS" />
         <div className="vb-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
           {albumsSorted.map((a, i) => (
-            <button key={a.id} onClick={() => setNav('album:' + a.id)} className="vb-album vb-rise" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left', animationDelay: (i * 0.06) + 's' }}>
+            <button key={a.id} onClick={() => setNav('album:' + a.id)} className="vb-album vb-fade" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left', animationDelay: (i * 0.06) + 's' }}>
               <div className="vb-cover" style={{ aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden' }}><Ph label={cover(a)[0]} meta="" ticks={false} /></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 12 }}>
-                <span style={{ fontFamily: H.serif, fontSize: 22, fontWeight: 500, color: H.ink, whiteSpace: 'nowrap' }}>{a.name}</span>
-                <span style={{ fontFamily: H.mono, fontSize: 10, color: H.muted }}>{a.photos.length} FRAMES</span>
+              <div className="vb-album-copy vb-album-copy-lg">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 14, marginTop: 12 }}>
+                  <span style={{ fontFamily: H.serif, fontSize: 22, fontWeight: 500, color: H.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</span>
+                  <span style={{ fontFamily: H.mono, fontSize: 10, color: H.muted, flex: '0 0 auto' }}>{a.photos.length} FRAMES</span>
+                </div>
+                <div style={{ fontFamily: H.sans, fontSize: 13, fontWeight: 500, color: H.ink2, marginTop: 3 }}>{a.places}</div>
+                <div style={{ fontFamily: H.mono, fontSize: 9.5, fontWeight: 700, color: H.muted, marginTop: 4, paddingLeft: 3 }}>Updated {updated(a)}</div>
               </div>
-              <div style={{ fontFamily: H.sans, fontSize: 13, color: H.ink2, marginTop: 3 }}>{a.places}</div>
-              <div style={{ fontFamily: H.mono, fontSize: 9.5, color: H.muted, marginTop: 4 }}>UPDATED {updated(a)}</div>
             </button>
           ))}
         </div>

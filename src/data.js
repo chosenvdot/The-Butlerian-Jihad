@@ -56,16 +56,18 @@ export const VBDATA = {
     ] },
   ],
   socials: [
-    ['Instagram', '@victorbrasil', 'https://instagram.com/victorbrasil'],
+    ['Instagram', '@chsnvictor', 'https://instagram.com/chsnvictor'],
+    ['X', '@chosenvdot', 'https://x.com/chosenvdot'],
     ['GitHub', 'chosenvdot', 'https://github.com/chosenvdot'],
     ['LinkedIn', 'in/victor-m-brasil', 'https://www.linkedin.com/in/victor-m-brasil/'],
   ],
 };
 
-export const SPOTIFY_URL = 'https://open.spotify.com/user/victorbrasil';
+export const SPOTIFY_URL = 'https://open.spotify.com/user/31fpyir2tdzq5ibgleoap3loy2tu?si=29732e33a4e54de7';
 
 // Last-played proxy worker (see spotify-worker/). Filled in with the deployed
 // *.workers.dev URL after the first `wrangler deploy`.
 export const SPOTIFY_API = 'https://victorbrasil-spotify.chosenvictor12.workers.dev';
 
 export const CONTACT_EMAIL = 'v.brasil8@icloud.com';
+export const LOCATION = 'Washington, DC';

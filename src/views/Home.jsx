@@ -70,7 +70,7 @@ function LastPlayed() {
     return () => { on = false }
   }, [])
 
-  const href = (t && t.url) || SPOTIFY_URL
+  const href = SPOTIFY_URL
   const kicker = t && t.isPlaying ? 'NOW PLAYING' : 'LAST PLAYED'
   const title = t ? t.title : '—'
   const artist = t ? t.artist : 'Spotify'
