@@ -13,9 +13,13 @@ export default function Engineering({ H = HOUSE, D = VBDATA }) {
             <span style={{ fontFamily: H.mono, fontSize: 11.5, color: H.muted, textAlign: 'right' }}>{r[2]}</span>
             <span className="vb-cv-plus" style={{ fontFamily: H.mono, fontSize: 15, color: H.apple[5], textAlign: 'right' }}>+</span>
           </summary>
-          <ul style={{ margin: '0 0 18px', paddingLeft: 18, fontFamily: H.sans, fontSize: 14.5, color: H.ink2, lineHeight: 1.7, maxWidth: 660 }}>
-            {r[3].map((b, j) => <li key={j}>{b}</li>)}
-          </ul>
+          {r[3].length > 0 ? (
+            <ul style={{ margin: '0 0 18px', paddingLeft: 18, fontFamily: H.sans, fontSize: 14.5, color: H.ink2, lineHeight: 1.7, maxWidth: 660 }}>
+              {r[3].map((b, j) => <li key={j}>{b}</li>)}
+            </ul>
+          ) : (
+            <div aria-hidden="true" style={{ minHeight: 72, marginBottom: 18 }} />
+          )}
         </details>
       ))}
     </div>

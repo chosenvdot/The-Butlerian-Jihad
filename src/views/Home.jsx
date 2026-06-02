@@ -9,12 +9,11 @@ import Ph from '../components/Placeholder'
 const H = HOUSE
 const D = VBDATA
 
-// Preview content for each card.
 function PhotographyPreview() {
   const photos = D.albums
     .flatMap(a => a.photos)
     .sort((x, y) => y[2].localeCompare(x[2]))
-  const frameLabel = `${photos.length} FRAMES · ${D.albums.length} ALBUMS`
+  const frameLabel = `${photos.length} FRAMES \u00b7 ${D.albums.length} ALBUMS`
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
@@ -31,15 +30,11 @@ function EngineeringPreview() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
       <span style={{ fontFamily: H.mono, fontSize: 10.5, letterSpacing: '0.1em', color: H.mocha }}>CURRENTLY</span>
       <div>
-        <div style={{ fontFamily: H.serif, fontSize: 23, fontWeight: 500, color: H.ink, lineHeight: 1.1 }}>Senior Software Engineer</div>
-        <div style={{ fontFamily: H.sans, fontSize: 14, color: H.ink2, marginTop: 3 }}>Google · since 2021</div>
+        <div style={{ fontFamily: H.serif, fontSize: 23, fontWeight: 500, color: H.ink, lineHeight: 1.1 }}>Design Manager</div>
+        <div style={{ fontFamily: H.sans, fontSize: 14, color: H.ink2, marginTop: 3 }}>Amazon Web Services - since 2025</div>
       </div>
-      <p style={{ fontFamily: H.sans, fontSize: 13.5, color: H.ink2, lineHeight: 1.55, margin: 0 }}>Latency &amp; sharding for a service at 4B+ requests a day.</p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 'auto' }}>
-        {['Distributed Systems', 'Go', 'C++', 'Reliability'].map((s, i) => (
-          <span key={i} style={{ fontFamily: H.mono, fontSize: 10, color: H.ink2, border: `1px solid ${H.line}`, padding: '4px 9px', borderRadius: 999 }}>{s}</span>
-        ))}
-      </div>
+      <div aria-hidden="true" style={{ minHeight: 72 }} />
+      <div aria-hidden="true" style={{ marginTop: 'auto', minHeight: 62 }} />
     </div>
   )
 }
@@ -48,7 +43,7 @@ function JournalPreview() {
   const j = D.journal[0]
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
-      <span style={{ fontFamily: H.mono, fontSize: 10.5, letterSpacing: '0.1em', color: H.mocha }}>LATEST · {j[0]}</span>
+      <span style={{ fontFamily: H.mono, fontSize: 10.5, letterSpacing: '0.1em', color: H.mocha }}>LATEST &middot; {j[0]}</span>
       <div style={{ fontFamily: H.serif, fontSize: 23, fontWeight: 500, color: H.ink, lineHeight: 1.2 }}>{j[1]}</div>
       <p style={{ fontFamily: H.sans, fontSize: 13.5, color: H.ink2, lineHeight: 1.55, margin: 0 }}>{j[2]}</p>
       <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.1em', color: H.apple[2], marginTop: 'auto' }}>{j[3]}</span>
@@ -56,9 +51,6 @@ function JournalPreview() {
   )
 }
 
-// Live "Last Played / Now Playing" pill. Fetches the spotify-worker proxy and
-// degrades gracefully: until it loads (or if it fails) it shows a neutral
-// placeholder and still links to the Spotify profile.
 function LastPlayed() {
   const [t, setT] = useState(null)
   useEffect(() => {
@@ -72,9 +64,9 @@ function LastPlayed() {
 
   const href = SPOTIFY_URL
   const kicker = t && t.isPlaying ? 'NOW PLAYING' : 'LAST PLAYED'
-  const title = t ? t.title : '—'
+  const title = t ? t.title : '-'
   const artist = t ? t.artist : 'Spotify'
-  const live = !t || t.isPlaying // animate while loading or actually playing
+  const live = !t || t.isPlaying
 
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className="vb-lastplayed"
@@ -88,11 +80,11 @@ function LastPlayed() {
           : <Ph label="" ticks={false} tint={H.apple[3]} />}
       </span>
       <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.12em', color: H.mocha }}>{kicker}</span>
-      <span style={{ fontFamily: H.sans, fontSize: 13.5, color: H.ink, whiteSpace: 'nowrap' }}>{title} <span style={{ color: H.muted }}>· {artist}</span></span>
+      <span style={{ fontFamily: H.sans, fontSize: 13.5, color: H.ink, whiteSpace: 'nowrap' }}>{title} <span style={{ color: H.muted }}>&middot; {artist}</span></span>
       <span style={{ display: 'inline-flex', alignItems: 'flex-end', gap: 2.5, height: 13 }}>
         {[0, 1, 2].map(i => <span key={i} className="rot-bar" style={{ width: 3, height: 13, background: H.apple[3], animationDelay: (i * 0.16) + 's', animationPlayState: live ? 'running' : 'paused' }} />)}
       </span>
-      <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.1em', color: H.mocha }}>SPOTIFY ↗</span>
+      <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.1em', color: H.mocha }}>SPOTIFY &#8599;</span>
     </a>
   )
 }
@@ -116,7 +108,7 @@ export default function Home({ onHome, onEnter }) {
       <main className="vb-pad" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 40px 56px', gap: 0 }}>
         <AnimatedMasthead H={H} size={108} />
         <p style={{ fontFamily: H.sans, fontSize: 17, color: H.ink2, margin: '28px 0 22px', maxWidth: 460, textAlign: 'center', lineHeight: 1.5, textWrap: 'pretty' }}>
-          I make pictures and systems — both about light, structure, and patience. Choose a way in.
+          Plan all the time so your impulsive decisions are calculated
         </p>
         <LastPlayed />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 26, width: '100%', maxWidth: 1140 }}>
@@ -130,7 +122,7 @@ export default function Home({ onHome, onEnter }) {
               <div style={{ padding: '24px 26px 26px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
                   <span style={{ fontFamily: H.serif, fontSize: 27, fontWeight: 500, color: H.ink, whiteSpace: 'nowrap' }}>{c.title}</span>
-                  <span className="vb-enter" style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: H.mono, fontSize: 10, letterSpacing: '0.1em', color: H.mocha, transition: 'gap .2s, color .2s' }}>ENTER <span style={{ fontFamily: H.serif, fontSize: 18 }}>→</span></span>
+                  <span className="vb-enter" style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: H.mono, fontSize: 10, letterSpacing: '0.1em', color: H.mocha, transition: 'gap .2s, color .2s' }}>ENTER <span style={{ fontFamily: H.serif, fontSize: 18 }}>&#8594;</span></span>
                 </div>
                 {PREVIEWS[c.key]}
               </div>

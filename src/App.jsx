@@ -12,7 +12,7 @@ const H = HOUSE
 // Per-section masthead metadata (accent dot + kicker + title + right-hand intro).
 const SECTION_META = {
   photography: { accent: H.apple[0], kicker: 'GALLERY', title: 'Photography', intro: 'Albums and recent frames from the edges of the map. Full-resolution RAW available per frame.' },
-  engineering: { accent: H.apple[5], kicker: 'CURRICULUM', title: 'Engineering', intro: 'Fifteen years of distributed systems. Click a role to expand. PDF available.' },
+  engineering: { accent: H.apple[5], kicker: 'CURRICULUM', title: 'Engineering', intro: 'Roles and details in progress.' },
   journal: { accent: H.apple[2], kicker: 'WRITING', title: 'Journal', intro: 'Field notes and engineering essays. The throughline is patience.' },
   contact: {
     accent: H.apple[4],
