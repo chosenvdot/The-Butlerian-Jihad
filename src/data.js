@@ -76,4 +76,8 @@ export const VBDATA = {
 
 export const SPOTIFY_URL = 'https://open.spotify.com/user/victorbrasil';
 
+// Last-played proxy worker (see spotify-worker/). Filled in with the deployed
+// *.workers.dev URL after the first `wrangler deploy`.
+export const SPOTIFY_API = 'https://victorbrasil-spotify.chosenvictor12.workers.dev';
+
 export const CONTACT_EMAIL = 'v.brasil8@icloud.com';

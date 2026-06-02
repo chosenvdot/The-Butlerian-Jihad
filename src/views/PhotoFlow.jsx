@@ -22,10 +22,10 @@ export default function PhotoFlow({ nav, setNav, H = HOUSE, D = VBDATA }) {
 
   // ---------------- HUB ----------------
   if (nav === 'hub') {
-    const Pane = ({ title, sub, onAll, children }) => (
-      <div style={{ display: 'flex', flexDirection: 'column', border: `1px solid ${H.line}`, borderRadius: 8, overflow: 'hidden', background: '#f5efe1' }}>
-        <div style={{ height: 3, background: green }} />
-        <button onClick={onAll} className="vb-panehead vb-rise"
+    const Pane = ({ title, sub, onAll, children, delay = 0 }) => (
+      <div className="vb-rise" style={{ display: 'flex', flexDirection: 'column', border: `1px solid ${H.line}`, borderRadius: 8, background: '#f5efe1', animationDelay: delay + 's' }}>
+        <div style={{ height: 3, background: green, borderRadius: '8px 8px 0 0' }} />
+        <button onClick={onAll} className="vb-panehead"
           style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '18px 22px 16px', border: 'none', borderBottom: `1px solid ${H.line}`, background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
           <span>
             <span style={{ display: 'block', fontFamily: H.serif, fontSize: 30, fontWeight: 500, color: H.ink }}>{title}</span>
@@ -38,19 +38,19 @@ export default function PhotoFlow({ nav, setNav, H = HOUSE, D = VBDATA }) {
     )
     return (
       <div className="vb-twopane" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 26, alignItems: 'start' }}>
-        <Pane title="Recents" sub="EVERYTHING · NEWEST FIRST" onAll={() => setNav('recents')}>
+        <Pane title="Recents" sub="EVERYTHING · NEWEST FIRST" onAll={() => setNav('recents')} delay={0}>
           <div className="vb-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 6 }}>
             {recents.slice(0, 12).map((p, i) => (
-              <button key={i} onClick={() => setNav('recents')} className="vb-photo vb-rise" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', aspectRatio: '1', animationDelay: (0.1 + i * 0.035) + 's' }}>
+              <button key={i} onClick={() => setNav('recents')} className="vb-photo vb-rise" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', aspectRatio: '1', animationDelay: (0.22 + i * 0.035) + 's' }}>
                 <Ph label={p.place} meta={p.date} ticks={false} />
               </button>
             ))}
           </div>
         </Pane>
-        <Pane title="Albums" sub="BY COLLECTION" onAll={() => setNav('albums')}>
+        <Pane title="Albums" sub="BY COLLECTION" onAll={() => setNav('albums')} delay={0.1}>
           <div className="vb-grid2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
             {albumsSorted.slice(0, 6).map((a, i) => (
-              <button key={a.id} onClick={() => setNav('album:' + a.id)} className="vb-album vb-rise" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left', animationDelay: (0.14 + i * 0.05) + 's' }}>
+              <button key={a.id} onClick={() => setNav('album:' + a.id)} className="vb-album vb-rise" style={{ border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left', animationDelay: (0.32 + i * 0.05) + 's' }}>
                 <div className="vb-cover" style={{ aspectRatio: '4/3', borderRadius: 5, overflow: 'hidden' }}><Ph label={cover(a)[0]} meta="" ticks={false} /></div>
                 <div style={{ fontFamily: H.serif, fontSize: 17, fontWeight: 500, color: H.ink, marginTop: 8, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</div>
                 <div style={{ fontFamily: H.mono, fontSize: 9.5, color: H.muted, marginTop: 2 }}>{a.photos.length} · UPD {updated(a)}</div>

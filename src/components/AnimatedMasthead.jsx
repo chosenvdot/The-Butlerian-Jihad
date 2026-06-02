@@ -79,7 +79,7 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
   const W = 1180, Hh = 230, cx = W / 2, by = 156
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ textAlign: 'center', width: '100%', maxWidth: Math.round(size * 10.6), margin: '0 auto' }}>
       <div style={{ fontFamily: H.mono, fontSize: 10.5, letterSpacing: '0.42em', color: H.mocha, marginBottom: 12, paddingLeft: '0.42em' }}>PHOTOGRAPHER · ENGINEER</div>
       <svg viewBox={`0 0 ${W} ${Hh}`} role="img" aria-label="Victor Brasil"
         style={{ width: '100%', maxWidth: Math.round(size * 10.6), height: 'auto', display: 'block', margin: '0 auto', overflow: 'visible' }}>

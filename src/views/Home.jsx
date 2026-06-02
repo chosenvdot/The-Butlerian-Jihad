@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react'
 import { HOUSE } from '../tokens'
-import { VBDATA, SPOTIFY_URL } from '../data'
+import { VBDATA, SPOTIFY_URL, SPOTIFY_API } from '../data'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import AnimatedMasthead from '../components/AnimatedMasthead'
@@ -50,6 +51,47 @@ function JournalPreview() {
   )
 }
 
+// Live "Last Played / Now Playing" pill. Fetches the spotify-worker proxy and
+// degrades gracefully: until it loads (or if it fails) it shows a neutral
+// placeholder and still links to the Spotify profile.
+function LastPlayed() {
+  const [t, setT] = useState(null)
+  useEffect(() => {
+    let on = true
+    fetch(`${SPOTIFY_API}/last-played`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (on && d && d.title) setT(d) })
+      .catch(() => {})
+    return () => { on = false }
+  }, [])
+
+  const href = (t && t.url) || SPOTIFY_URL
+  const kicker = t && t.isPlaying ? 'NOW PLAYING' : 'LAST PLAYED'
+  const title = t ? t.title : '—'
+  const artist = t ? t.artist : 'Spotify'
+  const live = !t || t.isPlaying // animate while loading or actually playing
+
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="vb-lastplayed"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 12, textDecoration: 'none',
+        border: `1px solid ${H.line}`, borderRadius: 999, padding: '7px 17px 7px 7px', background: '#f5efe1', marginBottom: 56,
+      }}>
+      <span style={{ width: 30, height: 30, borderRadius: 999, overflow: 'hidden', flexShrink: 0, display: 'block' }}>
+        {t && t.image
+          ? <img src={t.image} alt="" width={30} height={30} style={{ display: 'block', objectFit: 'cover' }} />
+          : <Ph label="" ticks={false} tint={H.apple[3]} />}
+      </span>
+      <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.12em', color: H.mocha }}>{kicker}</span>
+      <span style={{ fontFamily: H.sans, fontSize: 13.5, color: H.ink, whiteSpace: 'nowrap' }}>{title} <span style={{ color: H.muted }}>· {artist}</span></span>
+      <span style={{ display: 'inline-flex', alignItems: 'flex-end', gap: 2.5, height: 13 }}>
+        {[0, 1, 2].map(i => <span key={i} className="rot-bar" style={{ width: 3, height: 13, background: H.apple[3], animationDelay: (i * 0.16) + 's', animationPlayState: live ? 'running' : 'paused' }} />)}
+      </span>
+      <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.1em', color: H.mocha }}>SPOTIFY ↗</span>
+    </a>
+  )
+}
+
 const PREVIEWS = {
   photography: <PhotographyPreview />,
   engineering: <EngineeringPreview />,
@@ -71,19 +113,7 @@ export default function Home({ onHome, onEnter }) {
         <p style={{ fontFamily: H.sans, fontSize: 17, color: H.ink2, margin: '28px 0 22px', maxWidth: 460, textAlign: 'center', lineHeight: 1.5, textWrap: 'pretty' }}>
           I make pictures and systems — both about light, structure, and patience. Choose a way in.
         </p>
-        <a href={SPOTIFY_URL} target="_blank" rel="noopener noreferrer" className="vb-lastplayed"
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 12, textDecoration: 'none',
-            border: `1px solid ${H.line}`, borderRadius: 999, padding: '7px 17px 7px 7px', background: '#f5efe1', marginBottom: 56,
-          }}>
-          <span style={{ width: 30, height: 30, borderRadius: 999, overflow: 'hidden', flexShrink: 0 }}><Ph label="" ticks={false} tint={H.apple[3]} /></span>
-          <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.12em', color: H.mocha }}>LAST PLAYED</span>
-          <span style={{ fontFamily: H.sans, fontSize: 13.5, color: H.ink, whiteSpace: 'nowrap' }}>Northern Drift <span style={{ color: H.muted }}>· Glassbird</span></span>
-          <span style={{ display: 'inline-flex', alignItems: 'flex-end', gap: 2.5, height: 13 }}>
-            {[0, 1, 2].map(i => <span key={i} className="rot-bar" style={{ width: 3, height: 13, background: H.apple[3], animationDelay: (i * 0.16) + 's' }} />)}
-          </span>
-          <span style={{ fontFamily: H.mono, fontSize: 9.5, letterSpacing: '0.1em', color: H.mocha }}>SPOTIFY ↗</span>
-        </a>
+        <LastPlayed />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 26, width: '100%', maxWidth: 1140 }}>
           {CARDS.map(c => (
             <button key={c.key} className="vb-card" onClick={() => onEnter(c.key)}
