@@ -3,16 +3,6 @@
 // content files or a CMS; the CV is fine as static data.
 
 export const VBDATA = {
-  photos: [
-    ['Reykjavík', 'f/8 · 1/250'], ['Atacama', 'f/11 · 1/60'], ['Lofoten', 'f/4 · 1/1000'], ['Kyoto', 'f/2 · 1/125'],
-    ['Faroe', 'f/16 · 30s'], ['Namib', 'f/9 · 1/400'], ['Dolomites', 'f/5.6 · 1/800'], ['Hokkaido', 'f/8 · 1/2000'],
-    ['Lisbon', 'f/5.6 · 1/500'], ['Patagonia', 'f/11 · 1/200'], ['Svalbard', 'f/4 · 1/2000'], ['Porto', 'f/2.8 · 1/160'],
-  ],
-  series: [
-    ['North Atlantic', 'Iceland · Faroe · Lofoten', '34'],
-    ['Deserts', 'Atacama · Namib', '22'],
-    ['Quiet Cities', 'Kyoto · Lisbon · Porto', '41'],
-  ],
   cv: [
     ['Senior Software Engineer', 'Google', '2021 — Now', [
       'Led latency work on a search-adjacent service handling 4B+ daily requests; cut p99 by 38%.',
@@ -66,11 +56,9 @@ export const VBDATA = {
     ] },
   ],
   socials: [
-    ['Email', 'v.brasil8@icloud.com', 'mailto:v.brasil8@icloud.com'],
     ['Instagram', '@victorbrasil', 'https://instagram.com/victorbrasil'],
     ['GitHub', 'chosenvdot', 'https://github.com/chosenvdot'],
     ['LinkedIn', 'in/victor-m-brasil', 'https://www.linkedin.com/in/victor-m-brasil/'],
-    ['Spotify', 'Victor Brasil', 'https://open.spotify.com/user/victorbrasil'],
   ],
 };
 

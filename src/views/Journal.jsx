@@ -8,7 +8,7 @@ export default function Journal({ journalNav, setJournalNav, H = HOUSE, D = VBDA
       <div style={{ borderTop: `1px solid ${H.line}`, maxWidth: 980 }}>
         {D.journal.map((j, i) => (
           <button key={i} className="vb-jrow" onClick={() => setJournalNav(i)}
-            style={{ width: '100%', display: 'grid', gridTemplateColumns: '130px 1fr 120px', gap: 22, alignItems: 'baseline', padding: '24px 8px', borderBottom: `1px solid ${H.line}`, background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
+            style={{ width: '100%', display: 'grid', gridTemplateColumns: '130px 1fr 120px', gap: 22, alignItems: 'baseline', padding: '24px 8px', background: 'transparent', border: 'none', borderBottom: `1px solid ${H.line}`, cursor: 'pointer', textAlign: 'left' }}>
             <span style={{ fontFamily: H.mono, fontSize: 11.5, color: H.muted }}>{j[0]}</span>
             <div>
               <h3 style={{ fontFamily: H.serif, fontSize: 26, fontWeight: 500, margin: '0 0 6px', color: H.ink }}>{j[1]}</h3>

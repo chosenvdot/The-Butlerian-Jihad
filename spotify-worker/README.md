@@ -2,7 +2,7 @@
 
 Tiny Cloudflare Worker that powers the **Last Played / Now Playing** pill on the
 home page. Holds the Spotify refresh token as a secret, swaps it for an access
-token, proxies the player API, and caches the result in KV (~45s).
+token, proxies the player API, and caches the result in KV for 60 seconds.
 
 Kept as a **separate worker** on purpose: the main `victorbrasil` site deploys
 via wrangler's zero-config Vite auto-detect, and adding a config there would

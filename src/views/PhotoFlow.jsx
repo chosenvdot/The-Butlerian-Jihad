@@ -104,7 +104,16 @@ export default function PhotoFlow({ nav, setNav, H = HOUSE, D = VBDATA }) {
   // ---------------- ALBUM DETAIL ----------------
   if (nav.startsWith('album:')) {
     const a = albums.find(x => x.id === nav.slice(6))
-    if (!a) { setNav('albums'); return null }
+    if (!a) {
+      return (
+        <div>
+          <Crumb to="hub" label="PHOTOGRAPHY" current="ALBUM NOT FOUND" />
+          <button onClick={() => setNav('albums')} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 0, fontFamily: H.mono, fontSize: 11, letterSpacing: '0.08em', color: H.mocha }}>
+            ALL ALBUMS
+          </button>
+        </div>
+      )
+    }
     const photos = [...a.photos].sort((x, y) => y[2].localeCompare(x[2]))
     return (
       <div>

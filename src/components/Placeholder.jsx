@@ -11,22 +11,22 @@ const TICKS = [
 ]
 
 export default function Placeholder({
-  label = 'PHOTO', meta, idx, tint, dark = false, radius = 0, style = {}, ticks = true, big = false,
+  label = 'PHOTO', meta, idx, tint, ticks = true,
 }) {
-  let base = dark ? '#1d1812' : '#ddd0b6'
-  let stripe = dark ? 'rgba(255,255,255,0.035)' : 'rgba(43,33,23,0.05)'
-  let fg = dark ? 'rgba(236,227,209,0.55)' : 'rgba(43,33,23,0.5)'
+  let base = '#ddd0b6'
+  let stripe = 'rgba(43,33,23,0.05)'
+  let fg = 'rgba(43,33,23,0.5)'
   if (tint) {
-    base = `color-mix(in oklab, ${tint} ${dark ? 28 : 34}%, ${dark ? '#1d1812' : '#e3d8c0'})`
+    base = `color-mix(in oklab, ${tint} 34%, #e3d8c0)`
     stripe = `color-mix(in oklab, ${tint} 40%, transparent)`
-    fg = dark ? 'rgba(255,255,255,0.7)' : 'rgba(43,33,23,0.55)'
+    fg = 'rgba(43,33,23,0.55)'
   }
   return (
     <div style={{
       position: 'relative', width: '100%', height: '100%', overflow: 'hidden',
       background: base,
       backgroundImage: `repeating-linear-gradient(45deg, ${stripe} 0 2px, transparent 2px 11px)`,
-      borderRadius: radius, ...style,
+      borderRadius: 0,
     }}>
       {ticks && TICKS.map((p, i) => (
         <span key={i} style={{
@@ -39,7 +39,7 @@ export default function Placeholder({
         }} />
       ))}
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, textAlign: 'center', padding: 16 }}>
-        <span style={{ fontFamily: '"Space Mono", monospace', fontSize: big ? 13 : 10.5, letterSpacing: '0.18em', color: fg, textTransform: 'uppercase' }}>{label}</span>
+        <span style={{ fontFamily: '"Space Mono", monospace', fontSize: 10.5, letterSpacing: '0.18em', color: fg, textTransform: 'uppercase' }}>{label}</span>
         {meta && <span style={{ fontFamily: '"Space Mono", monospace', fontSize: 9.5, letterSpacing: '0.04em', color: fg, opacity: 0.8 }}>{meta}</span>}
       </div>
       {idx != null && <span style={{ position: 'absolute', top: 8, left: 10, fontFamily: '"Space Mono", monospace', fontSize: 9.5, color: fg }}>{idx}</span>}

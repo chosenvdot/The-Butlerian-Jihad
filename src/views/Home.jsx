@@ -11,12 +11,17 @@ const D = VBDATA
 
 // Preview content for each card.
 function PhotographyPreview() {
+  const photos = D.albums
+    .flatMap(a => a.photos)
+    .sort((x, y) => y[2].localeCompare(x[2]))
+  const frameLabel = `${photos.length} FRAMES · ${D.albums.length} ALBUMS`
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 3, flex: 1, minHeight: 170 }}>
-        {D.photos.slice(0, 4).map((p, i) => <Ph key={i} label={p[0]} meta="" ticks={false} />)}
+        {photos.slice(0, 4).map((p, i) => <Ph key={i} label={p[0]} meta="" ticks={false} />)}
       </div>
-      <span style={{ fontFamily: H.mono, fontSize: 11, color: H.muted }}>117 FRAMES · 9 SERIES</span>
+      <span style={{ fontFamily: H.mono, fontSize: 11, color: H.muted }}>{frameLabel}</span>
     </div>
   )
 }

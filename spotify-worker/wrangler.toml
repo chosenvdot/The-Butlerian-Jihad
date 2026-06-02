@@ -2,7 +2,7 @@ name = "victorbrasil-spotify"
 main = "src/index.js"
 compatibility_date = "2025-01-01"
 
-# Cache for the last-played payload (TTL is set in code, ~45s).
+# Cache for the last-played payload (TTL is set in code at KV's 60s minimum).
 [[kv_namespaces]]
 binding = "SPOTIFY_KV"
 id = "4b2fb35d77d743b7a32c83528f927fde"
