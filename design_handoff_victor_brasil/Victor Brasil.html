@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Victor Brasil — Photographer, Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Baloo+2:wght@700;800&family=Space+Mono:wght@400;700&family=Sacramento&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #efe7d6; }
+  * { box-sizing: border-box; }
+  .vb-card { transition: transform .2s, box-shadow .2s, border-color .2s; }
+  .vb-card:hover { transform: translateY(-4px); box-shadow: 0 16px 44px rgba(25,19,7,.13); border-color: var(--accent); }
+  .vb-card:hover .vb-enter { gap: 10px; color: var(--accent); }
+  details summary::-webkit-details-marker { display: none; }
+  @keyframes rotEq { 0%,100%{transform:scaleY(0.3)} 50%{transform:scaleY(1)} }
+  @keyframes vbDraw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  .rot-bar { transform-origin: bottom; animation: rotEq .9s ease-in-out infinite; }
+  .vb-lastplayed { transition: border-color .2s, background .2s, transform .2s; }
+  .vb-lastplayed:hover { border-color: #bf4a30; background: #f0e7d6; transform: translateY(-1px); }
+  .vb-album { transition: transform .15s; }
+  .vb-album:hover { transform: translateY(-3px); }
+  .vb-panehead:hover .vb-allarrow { gap: 10px; color: #586b39; }
+  .vb-row { transition: background .15s, padding-left .15s; border-radius: 4px; }
+  .vb-row:hover { background: rgba(25,19,7,.035); padding-left: 12px; }
+  .vb-jrow { transition: background .15s, padding-left .15s; }
+  .vb-jrow:hover { background: rgba(25,19,7,.04); padding-left: 14px; }
+  /* ---------- mobile ---------- */
+  @media (max-width: 760px) {
+    #root h1 { font-size: clamp(40px, 13vw, 88px) !important; }
+    #root h2 { font-size: clamp(30px, 8.5vw, 52px) !important; }
+    .vb-pad { padding-left: 20px !important; padding-right: 20px !important; }
+    .vb-navlinks { gap: 13px !important; font-size: 10px !important; }
+    .vb-twopane { grid-template-columns: 1fr !important; }
+    .vb-grid4 { grid-template-columns: repeat(2, 1fr) !important; }
+    .vb-grid3 { grid-template-columns: repeat(2, 1fr) !important; }
+    .vb-row { grid-template-columns: 96px 1fr 18px !important; }
+    .vb-jrow { grid-template-columns: 70px 1fr 60px !important; gap: 12px !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<span aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;font-family:'Sacramento',cursive;font-size:40px;">Victor Brasil</span>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="directions/shared.jsx"></script>
+<script type="text/babel" src="landing/house.jsx"></script>
+<script type="text/babel" src="landing/animated_name.jsx"></script>
+<script type="text/babel" src="landing/photography.jsx"></script>
+<script type="text/babel" src="landing/site_app.jsx"></script>
+
+<script type="text/babel">
+ReactDOM.createRoot(document.getElementById('root')).render(<window.SiteApp />);
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+/* Global chrome, hover states, keyframes and the mobile breakpoint —
+   lifted from the prototype's <style> block (Victor Brasil.html). */
+
+html, body { margin: 0; padding: 0; background: #efe7d6; }
+* { box-sizing: border-box; }
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Preview cards on home */
+.vb-card { transition: transform .2s, box-shadow .2s, border-color .2s; }
+.vb-card:hover { transform: translateY(-4px); box-shadow: 0 16px 44px rgba(25, 19, 7, .13); border-color: var(--accent); }
+.vb-card:hover .vb-enter { gap: 10px; color: var(--accent); }
+
+/* Native <details> — hide the default marker on the CV rows */
+details summary::-webkit-details-marker { display: none; }
+details summary { list-style: none; }
+
+/* Animated equalizer bars (last-played pill + now-playing) */
+@keyframes rotEq { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+.rot-bar { transform-origin: bottom; animation: rotEq .9s ease-in-out infinite; }
+
+/* Last-played pill */
+.vb-lastplayed { transition: border-color .2s, background .2s, transform .2s; }
+.vb-lastplayed:hover { border-color: #bf4a30; background: #f0e7d6; transform: translateY(-1px); }
+
+/* Album cards */
+.vb-album { transition: transform .15s; }
+.vb-album:hover { transform: translateY(-3px); }
+
+/* Pane "VIEW ALL" header */
+.vb-panehead:hover .vb-allarrow { gap: 10px; color: #586b39; }
+
+/* Contact social rows */
+.vb-row { transition: background .15s, padding-left .15s; border-radius: 4px; }
+.vb-row:hover { background: rgba(25, 19, 7, .035); padding-left: 12px; }
+
+/* Journal list rows */
+.vb-jrow { transition: background .15s, padding-left .15s; }
+.vb-jrow:hover { background: rgba(25, 19, 7, .04); padding-left: 14px; }
+
+/* ---------- mobile ---------- */
+@media (max-width: 760px) {
+  #root h2 { font-size: clamp(30px, 8.5vw, 52px) !important; }
+  .vb-pad { padding-left: 20px !important; padding-right: 20px !important; }
+  .vb-navlinks { gap: 13px !important; font-size: 10px !important; }
+  .vb-twopane { grid-template-columns: 1fr !important; }
+  .vb-grid4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .vb-grid3 { grid-template-columns: repeat(2, 1fr) !important; }
+  .vb-row { grid-template-columns: 96px 1fr 18px !important; }
+  .vb-jrow { grid-template-columns: 70px 1fr 60px !important; gap: 12px !important; }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .rot-bar { animation: none; transform: scaleY(0.7); }
+  .vb-card, .vb-album, .vb-lastplayed, .vb-row, .vb-jrow { transition: none; }
+}
