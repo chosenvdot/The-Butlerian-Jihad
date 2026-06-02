@@ -66,12 +66,14 @@ export const VBDATA = {
     ] },
   ],
   socials: [
-    ['Email', 'victor@brasil.photo', 'mailto:victor@brasil.photo'],
+    ['Email', 'v.brasil8@icloud.com', 'mailto:v.brasil8@icloud.com'],
     ['Instagram', '@victorbrasil', 'https://instagram.com/victorbrasil'],
-    ['GitHub', 'victorbrasil', 'https://github.com/victorbrasil'],
-    ['LinkedIn', 'in/victorbrasil', 'https://linkedin.com/in/victorbrasil'],
+    ['GitHub', 'chosenvdot', 'https://github.com/chosenvdot'],
+    ['LinkedIn', 'in/victor-m-brasil', 'https://www.linkedin.com/in/victor-m-brasil/'],
     ['Spotify', 'Victor Brasil', 'https://open.spotify.com/user/victorbrasil'],
   ],
 };
 
 export const SPOTIFY_URL = 'https://open.spotify.com/user/victorbrasil';
+
+export const CONTACT_EMAIL = 'v.brasil8@icloud.com';

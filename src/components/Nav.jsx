@@ -11,7 +11,7 @@ export default function Nav({ active, onHome, onEnter, H = HOUSE }) {
       alignItems: 'center', flexWrap: 'wrap', gap: 10, padding: '16px 40px',
       borderBottom: `1px solid ${H.line}`, background: 'rgba(239,231,214,0.86)', backdropFilter: 'blur(10px)',
     }}>
-      <button onClick={onHome} aria-label="Victor Brasil — home"
+      <button onClick={onHome} aria-label="Victor Brasil — home" className="vb-home"
         style={{ display: 'flex', alignItems: 'center', gap: 11, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
         <Pops h={14} w={3} />
         <span style={{ fontFamily: H.mono, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.16em', color: H.ink }}>VICTOR BRASIL</span>
@@ -21,7 +21,7 @@ export default function Nav({ active, onHome, onEnter, H = HOUSE }) {
           const k = it.toLowerCase()
           const isActive = active === k
           return (
-            <button key={it} onClick={() => onEnter(k)}
+            <button key={it} onClick={() => onEnter(k)} className="vb-navlink"
               style={{
                 border: 'none', background: 'transparent', cursor: 'pointer', padding: '0 0 2px',
                 color: isActive ? H.ink : H.muted, fontFamily: 'inherit', fontSize: 'inherit', letterSpacing: 'inherit',

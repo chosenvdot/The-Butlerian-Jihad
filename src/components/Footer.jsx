@@ -1,4 +1,5 @@
 import { HOUSE } from '../tokens'
+import { CONTACT_EMAIL } from '../data'
 import Pops from './Pops'
 
 export default function Footer({ H = HOUSE }) {
@@ -7,7 +8,7 @@ export default function Footer({ H = HOUSE }) {
       display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '22px 40px',
       borderTop: `1px solid ${H.line}`, fontFamily: H.mono, fontSize: 11, color: H.muted,
     }}>
-      <span>VICTOR@BRASIL.PHOTO</span>
+      <span>{CONTACT_EMAIL.toUpperCase()}</span>
       <Pops h={11} w={3} />
       <span>© 2026</span>
     </div>

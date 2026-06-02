@@ -39,7 +39,7 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
     Promise.all([
       fonts.load('500 150px "Newsreader"', 'Victor Brasil'),
       fonts.load('196px "Sacramento"', 'Victor Brasil'),
-      fonts.load('800 124px "Baloo 2"', 'Victor Brasil'),
+      fonts.load('400 92px "Audiowide"', 'Victor Brasil'),
     ]).catch(() => {}).then(() => fonts.ready).then(() => { if (!cancelled) setReady(true) })
     return () => { cancelled = true }
   }, [reduced])
@@ -90,7 +90,7 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
         </defs>
         <text x={cx} y={by} style={{ ...txt, fontFamily: H.serif, fontWeight: 500, fontSize: 150, letterSpacing: '-2px', opacity: phase === 0 ? 1 : 0 }} fill={H.ink}>Victor Brasil</text>
         <text key={'cur' + phase} x={cx} y={by + 6} clipPath={`url(#${uid}c)`} style={{ ...txt, fontFamily: '"Sacramento", cursive', fontSize: 196, opacity: phase === 1 ? 1 : 0 }} fill={`url(#${uid}r)`}>Victor Brasil</text>
-        <text x={cx} y={by} style={{ ...txt, fontFamily: '"Baloo 2", system-ui, sans-serif', fontWeight: 800, fontSize: 124, letterSpacing: '1px', opacity: phase === 2 ? 1 : 0 }} fill={`url(#${uid}s)`}>Victor Brasil</text>
+        <text x={cx} y={by} style={{ ...txt, fontFamily: '"Audiowide", system-ui, sans-serif', fontWeight: 400, fontSize: 92, letterSpacing: '0px', opacity: phase === 2 ? 1 : 0 }} fill={`url(#${uid}s)`}>Victor Brasil</text>
       </svg>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 6 }}>
         <Pops h={5} w={Math.round(size * 0.42)} radius={2} />

@@ -45,7 +45,7 @@ export default function App() {
   }[view]
 
   return (
-    <Section accent={meta.accent} kicker={meta.kicker} title={meta.title} intro={meta.intro}
+    <Section key={view} accent={meta.accent} kicker={meta.kicker} title={meta.title} intro={meta.intro}
       active={view} onHome={goHome} onEnter={enter}>
       {body}
     </Section>

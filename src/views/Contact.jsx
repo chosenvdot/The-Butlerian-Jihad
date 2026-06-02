@@ -1,12 +1,12 @@
 import { HOUSE } from '../tokens'
-import { VBDATA } from '../data'
+import { VBDATA, CONTACT_EMAIL } from '../data'
 
 // Contact — big mailto link + hairline list of socials. Email and Spotify are
 // filtered out of the list (email is the big link; Spotify lives on the home pill).
 export default function Contact({ H = HOUSE, D = VBDATA }) {
   return (
     <div style={{ maxWidth: 760 }}>
-      <a href="mailto:victor@brasil.photo" style={{ display: 'inline-block', fontFamily: H.serif, fontSize: 'clamp(30px,5vw,46px)', fontWeight: 500, color: H.ink, textDecoration: 'none', borderBottom: `2px solid ${H.apple[4]}`, paddingBottom: 4, marginBottom: 36 }}>victor@brasil.photo</a>
+      <a href={`mailto:${CONTACT_EMAIL}`} style={{ display: 'inline-block', fontFamily: H.serif, fontSize: 'clamp(30px,5vw,46px)', fontWeight: 500, color: H.ink, textDecoration: 'none', borderBottom: `2px solid ${H.apple[4]}`, paddingBottom: 4, marginBottom: 36 }}>{CONTACT_EMAIL}</a>
       <div style={{ borderTop: `1px solid ${H.line}` }}>
         {D.socials.filter(s => s[0] !== 'Email' && s[0] !== 'Spotify').map((s, i) => (
           <a key={i} href={s[2]} target="_blank" rel="noopener noreferrer" className="vb-row"

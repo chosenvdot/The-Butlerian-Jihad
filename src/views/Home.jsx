@@ -67,7 +67,7 @@ export default function Home({ onHome, onEnter }) {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: H.paper }}>
       <Nav active={null} onHome={onHome} onEnter={onEnter} />
       <main className="vb-pad" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 40px 56px', gap: 0 }}>
-        <AnimatedMasthead H={H} size={88} />
+        <AnimatedMasthead H={H} size={108} />
         <p style={{ fontFamily: H.sans, fontSize: 17, color: H.ink2, margin: '28px 0 22px', maxWidth: 460, textAlign: 'center', lineHeight: 1.5, textWrap: 'pretty' }}>
           I make pictures and systems — both about light, structure, and patience. Choose a way in.
         </p>
