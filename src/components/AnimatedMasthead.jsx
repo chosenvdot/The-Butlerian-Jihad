@@ -2,8 +2,9 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { HOUSE } from '../tokens'
 import Pops from './Pops'
 
-const PHASE_DURS = [5000, 4400, 3600]
+const PHASE_DURS = [6200, 5200, 5600]
 const AUDIOWIDE_PALETTE = ['#9b776d', '#9d5125', '#c1974d', '#d4dbd3', '#687061']
+const AUDIOWIDE_BAND_WEIGHTS = [1.34, 1.06, 0.8, 0.76, 1.04]
 
 export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
   const [phase, setPhase] = useState(0) // 0 serif · 1 cursive draw · 2 Audiowide
@@ -30,7 +31,7 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
     Promise.all([
       fonts.load('500 150px "Newsreader"', 'Victor Brasil'),
       fonts.load('196px "Sacramento"', 'Victor Brasil'),
-      fonts.load('400 146px "Audiowide"', 'Victor Brasil'),
+      fonts.load('400 168px "Audiowide"', 'Victor Brasil'),
     ]).catch(() => {}).then(() => fonts.ready).then(() => { if (!cancelled) setReady(true) })
     return () => { cancelled = true }
   }, [reduced])
@@ -65,17 +66,23 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
     <stop key={i + 'a'} offset={(i * 100 / A.length) + '%'} stopColor={c} />,
     <stop key={i + 'b'} offset={((i + 1) * 100 / A.length) + '%'} stopColor={c} />,
   ])
-  const audiowideStops = AUDIOWIDE_PALETTE.flatMap((c, i) => [
-    <stop key={i + 'a'} offset={(i * 100 / AUDIOWIDE_PALETTE.length) + '%'} stopColor={c} />,
-    <stop key={i + 'b'} offset={((i + 1) * 100 / AUDIOWIDE_PALETTE.length) + '%'} stopColor={c} />,
-  ])
-
   const txt = { textAnchor: 'middle', dominantBaseline: 'alphabetic', transition: 'opacity .6s ease' }
   const W = 1180, Hh = 230, cx = W / 2, by = 156
   const serifY = by + 9
   const cursiveY = by + 10
-  const audioFont = 146
-  const audioY = by + 11
+  const audioFont = 168
+  const audioY = by + 14
+  const audioBandTop = audioY - 140
+  const audioBandHeight = 156
+  const audioBandUnit = audioBandHeight / AUDIOWIDE_BAND_WEIGHTS.reduce((sum, weight) => sum + weight, 0)
+  const audioBands = AUDIOWIDE_PALETTE.map((c, i) => {
+    const offset = AUDIOWIDE_BAND_WEIGHTS.slice(0, i).reduce((sum, weight) => sum + weight, 0)
+    return {
+      c,
+      y: audioBandTop + offset * audioBandUnit,
+      h: AUDIOWIDE_BAND_WEIGHTS[i] * audioBandUnit,
+    }
+  })
 
   return (
     <div style={{ textAlign: 'center', width: '100%', maxWidth: Math.round(size * 10.6), margin: '0 auto' }}>
@@ -84,28 +91,38 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
         style={{ width: '100%', maxWidth: Math.round(size * 10.6), height: 'auto', display: 'block', margin: '0 auto', overflow: 'visible', opacity: ready ? 1 : 0, transition: 'opacity .18s ease' }}>
         <defs>
           <linearGradient id={uid + 'drawRainbow'} x1="0" y1="0" x2="1" y2="0">{stripeStops}</linearGradient>
-          <linearGradient id={uid + 'audiowideBands'} x1="0" y1="0" x2="0" y2="1">{audiowideStops}</linearGradient>
           <clipPath id={uid + 'draw'}><rect ref={rectRef} x="-10" y="-70" width={phase === 1 ? 0 : W} height={Hh + 140} /></clipPath>
+          {audioBands.map((band, i) => (
+            <clipPath key={i} id={uid + 'audioBand' + i} clipPathUnits="userSpaceOnUse">
+              <rect x="-10" y={band.y - 1.25} width={W + 20} height={band.h + 2.5} />
+            </clipPath>
+          ))}
         </defs>
         <text x={cx} y={serifY} style={{ ...txt, fontFamily: H.serif, fontWeight: 500, fontSize: 150, letterSpacing: '-2px', opacity: phase === 0 ? 1 : 0 }} fill={H.ink}>Victor Brasil</text>
         <text key={'cur' + phase} x={cx} y={cursiveY} clipPath={`url(#${uid}draw)`} style={{ ...txt, fontFamily: '"Sacramento", cursive', fontSize: 196, opacity: phase === 1 ? 1 : 0 }} fill={`url(#${uid}drawRainbow)`}>Victor Brasil</text>
         {phase === 2 && (
-          <text
-            key={'aud' + phase}
-            x={cx}
-            y={audioY}
-            className="vb-audio-band"
-            style={{
-              ...txt,
-              fontFamily: '"Audiowide", system-ui, sans-serif',
-              fontWeight: 400,
-              fontSize: audioFont,
-              letterSpacing: '0px',
-            }}
-            fill={`url(#${uid}audiowideBands)`}
-          >
-            Victor Brasil
-          </text>
+          <g key={'aud' + phase}>
+            {audioBands.map(({ c }, i) => (
+              <text
+                key={c}
+                x={cx}
+                y={audioY}
+                className="vb-audio-band"
+                clipPath={`url(#${uid}audioBand${i})`}
+                style={{
+                  ...txt,
+                  fontFamily: '"Audiowide", system-ui, sans-serif',
+                  fontWeight: 400,
+                  fontSize: audioFont,
+                  letterSpacing: '0px',
+                  animationDelay: (0.02 + i * 0.045) + 's',
+                }}
+                fill={c}
+              >
+                Victor Brasil
+              </text>
+            ))}
+          </g>
         )}
       </svg>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 6 }}>

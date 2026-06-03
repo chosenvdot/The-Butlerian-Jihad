@@ -98,15 +98,15 @@ details summary { list-style: none; }
 .vb-fade { animation: vbFade .34s ease both; }
 
 @keyframes vbAudioBandDrop {
-  0% { opacity: 0; transform: translateY(-6px); }
-  55% { opacity: .96; }
+  0% { opacity: 0; transform: translateY(-3px); }
+  60% { opacity: .98; }
   100% { opacity: 1; transform: translateY(0); }
 }
 .vb-audio-band {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: vbAudioBandDrop 1.08s cubic-bezier(.2, .9, .24, 1) both;
+  animation: vbAudioBandDrop 1.55s cubic-bezier(.16, .72, .22, 1) both;
   will-change: opacity, transform;
 }
 
