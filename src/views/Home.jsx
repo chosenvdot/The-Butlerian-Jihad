@@ -19,9 +19,24 @@ function PhotographyPreview() {
   const frameLabel = statsLabel(library)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 3, flex: 1, minHeight: 170 }}>
-        {photos.slice(0, 4).map((p, i) => <PhotoFrame key={p.id || i} frame={p} label="" caption={false} ticks={false} width={420} />)}
+    <div className="vb-home-photo-card">
+      <div className="vb-home-photo-grid">
+        {photos.slice(0, 4).map((p, i) => (
+          <PhotoFrame
+            key={p.id || i}
+            frame={p}
+            label=""
+            caption={false}
+            ticks={false}
+            width={360}
+            fit="cover"
+            gravity="auto"
+            quality={76}
+            ratio={1}
+            sizes="154px"
+            widths={[180, 360]}
+          />
+        ))}
       </div>
       <span style={{ fontFamily: H.mono, fontSize: 11, color: H.muted }}>{frameLabel}</span>
     </div>

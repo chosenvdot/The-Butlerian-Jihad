@@ -45,7 +45,20 @@ export default function PhotoFlow({ D = VBDATA }) {
       <div className="vb-photo-feed">
         {recents.map((p, i) => (
           <button key={p.id || i} type="button" onClick={() => setViewer(p)} className="vb-photo vb-photo-button vb-rise" style={{ aspectRatio: '4/3', animationDelay: (Math.min(i, 24) * 0.022) + 's' }}>
-            <PhotoFrame frame={p} label="" meta={frameMeta(p)} idx={frameIndex(p)} width={720} />
+            <PhotoFrame
+              frame={p}
+              label=""
+              meta={frameMeta(p)}
+              idx={frameIndex(p)}
+              width={420}
+              height={315}
+              fit="cover"
+              gravity="auto"
+              quality={76}
+              ratio={4 / 3}
+              sizes="(max-width: 760px) 16.6vw, 190px"
+              widths={[240, 420, 640]}
+            />
           </button>
         ))}
       </div>

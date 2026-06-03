@@ -9,12 +9,20 @@ export default function PhotoFrame({
   ticks = false,
   caption = true,
   width = 960,
+  height,
+  fit,
+  gravity,
+  quality,
+  ratio,
+  sizes = '(max-width: 760px) 50vw, 25vw',
+  widths,
 }) {
   const title = label !== undefined ? label : frameTitle(frame)
   const detail = meta || frameMeta(frame)
   const index = idx !== undefined ? idx : frameIndex(frame)
   const date = frameDate(frame)
-  const src = frameSrc(frame, width)
+  const transform = { h: height, fit, g: gravity, q: quality, ratio, widths }
+  const src = frameSrc(frame, width, transform)
 
   if (!src) return <Ph label={title} meta={detail} idx={index} ticks={ticks} />
 
@@ -22,8 +30,8 @@ export default function PhotoFrame({
     <div className={`vb-frame-real${caption ? '' : ' vb-frame-no-caption'}`}>
       <img
         src={src}
-        srcSet={frameSrcSet(frame)}
-        sizes="(max-width: 760px) 50vw, 25vw"
+        srcSet={frameSrcSet(frame, transform)}
+        sizes={sizes}
         alt={title}
         loading="lazy"
         decoding="async"

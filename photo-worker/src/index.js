@@ -29,7 +29,7 @@ export default {
         const library = await buildLibrary(url, env)
         return json(library, 200, {
           ...cors,
-          'Cache-Control': 'no-store',
+          'Cache-Control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400',
         })
       }
 
@@ -419,13 +419,20 @@ async function imageResponse(request, env, cors) {
   if (!env.SOURCE_TOKEN) return json({ error: 'source token unavailable' }, 503, cors)
 
   const width = clampInt(url.searchParams.get('w'), 160, 12000, 1200)
+  const height = clampInt(url.searchParams.get('h'), 0, 12000, 0)
   const quality = clampInt(url.searchParams.get('q'), 55, 92, 82)
+  const fit = imageFit(url.searchParams.get('fit'))
+  const gravity = imageGravity(url.searchParams.get('g') || url.searchParams.get('gravity'), fit)
 
   if (url.searchParams.get('debug') === '1') {
     return json({
       key,
       ext,
       size: object.size,
+      width,
+      height,
+      fit,
+      gravity,
       sourceUrl: `${url.origin}/__source/${encoded}`,
       hasImagesBinding: !!env.IMAGES,
       imageBindingKeys: env.IMAGES ? Object.keys(env.IMAGES) : [],
@@ -435,10 +442,20 @@ async function imageResponse(request, env, cors) {
   const sourceUrl = new URL(`/__source/${encoded}`, url.origin)
   sourceUrl.searchParams.set('token', env.SOURCE_TOKEN)
 
+  const image = { width, fit, quality, format: 'webp', metadata: 'none' }
+  if (height) image.height = height
+  if (gravity) image.gravity = gravity
+
   const transformed = await fetch(sourceUrl, {
-    cf: { image: { width, fit: 'scale-down', quality, format: 'webp', metadata: 'none' } },
+    cf: { image, cacheEverything: true, cacheTtl: 31536000 },
   })
-  return transformed
+  const headers = new Headers(transformed.headers)
+  headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+  return new Response(transformed.body, {
+    status: transformed.status,
+    statusText: transformed.statusText,
+    headers,
+  })
 }
 
 async function sourceResponse(request, env) {
@@ -709,6 +726,19 @@ function clampInt(value, min, max, fallback) {
   const number = Number.parseInt(value, 10)
   if (!Number.isFinite(number)) return fallback
   return Math.max(min, Math.min(max, number))
+}
+
+function imageFit(value) {
+  const fit = String(value || 'scale-down').toLowerCase()
+  return ['scale-down', 'cover', 'crop', 'contain', 'pad'].includes(fit) ? fit : 'scale-down'
+}
+
+function imageGravity(value, fit) {
+  if (!['cover', 'crop'].includes(fit)) return null
+  const gravity = String(value || 'auto').toLowerCase()
+  if (['auto', 'face', 'center', 'left', 'right', 'top', 'bottom'].includes(gravity)) return gravity
+  if (/^(0(\.\d+)?|1(\.0+)?)x(0(\.\d+)?|1(\.0+)?)$/.test(gravity)) return gravity
+  return 'auto'
 }
 
 function toIso(value) {

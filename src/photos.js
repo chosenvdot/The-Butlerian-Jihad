@@ -10,7 +10,7 @@ export function usePhotoLibrary(fallbackData = VBDATA) {
   useEffect(() => {
     let alive = true
 
-    fetch(`${PHOTO_API}/library?ts=${Date.now()}`)
+    fetch(`${PHOTO_API}/library`)
       .then(response => {
         if (!response.ok) throw new Error(`photo library ${response.status}`)
         return response.json()
@@ -96,25 +96,28 @@ export function frameIndex(frame) {
   return date.length >= 10 ? date.slice(5) : date
 }
 
-export function frameSrc(frame, width = 960) {
+export function frameSrc(frame, width = 960, options = {}) {
   if (!frame || Array.isArray(frame)) return null
-  if (frame.variants) {
+  if (Object.keys(options).length === 0 && frame.variants) {
     if (width <= 480 && frame.variants.thumb) return frame.variants.thumb
     if (width <= 1100 && frame.variants.medium) return frame.variants.medium
     if (frame.variants.large) return frame.variants.large
   }
   if (!frame.image) return null
-  return absoluteUrl(`${frame.image}?w=${width}`)
+  return imageUrl(frame.image, { ...options, w: width, h: transformHeight(width, options) })
 }
 
 export function frameFullSrc(frame) {
   if (!frame || Array.isArray(frame) || !frame.image) return null
-  return absoluteUrl(`${frame.image}?w=12000&q=92`)
+  return imageUrl(frame.image, { w: 12000, q: 92, fit: 'scale-down' })
 }
 
-export function frameSrcSet(frame) {
+export function frameSrcSet(frame, options = {}) {
   if (!frame || Array.isArray(frame) || !frame.image) return undefined
-  return [420, 960, 1600].map(width => `${absoluteUrl(`${frame.image}?w=${width}`)} ${width}w`).join(', ')
+  const widths = options.widths || [420, 960, 1600]
+  return widths.map(width => {
+    return `${imageUrl(frame.image, { ...options, w: width, h: transformHeight(width, options) })} ${width}w`
+  }).join(', ')
 }
 
 export function statsLabel(library) {
@@ -129,11 +132,19 @@ export function albumCountLabel(album) {
 
 function bestMeta(frame) {
   if (!frame || Array.isArray(frame)) return ''
-  if (frame.exposure) return frame.exposure
-  if (frame.lens && frame.camera) return `${frame.camera} - ${frame.lens}`
-  if (frame.lens) return frame.lens
+  if (frame.camera && cameraUsesSeparateLens(frame.camera) && frame.lens) return `${frame.camera} - ${frame.lens}`
   if (frame.camera) return frame.camera
+  if (frame.lens) return frame.lens
+  if (frame.exposure) return frame.exposure
   return ''
+}
+
+function cameraUsesSeparateLens(camera) {
+  const value = String(camera || '').toLowerCase()
+  if (!value) return false
+  if (value.includes('iphone')) return false
+  if (value.includes('powershot')) return false
+  return true
 }
 
 function countLibrary(albums) {
@@ -146,6 +157,21 @@ function absoluteUrl(value) {
   if (!value) return null
   if (/^https?:\/\//i.test(value)) return value
   return `${PHOTO_API}${value}`
+}
+
+function imageUrl(path, params) {
+  const url = new URL(absoluteUrl(path))
+  Object.entries(params).forEach(([key, value]) => {
+    if (value != null && value !== '' && key !== 'widths' && key !== 'ratio') {
+      url.searchParams.set(key, value)
+    }
+  })
+  return url.toString()
+}
+
+function transformHeight(width, options) {
+  if (options.ratio) return Math.round(width / options.ratio)
+  return options.h
 }
 
 function displayDate(value) {
