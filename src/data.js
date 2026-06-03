@@ -58,5 +58,8 @@ export const SPOTIFY_URL = 'https://open.spotify.com/user/31fpyir2tdzq5ibgleoap3
 // Last-played proxy worker (see spotify-worker/).
 export const SPOTIFY_API = 'https://victorbrasil-spotify.chosenvictor12.workers.dev';
 
+// R2-backed photo library proxy (see photo-worker/).
+export const PHOTO_API = import.meta.env.VITE_PHOTOS_API || 'https://victorbrasil-photos.chosenvictor12.workers.dev';
+
 export const CONTACT_EMAIL = 'v.brasil8@icloud.com';
 export const LOCATION = 'Washington, DC';

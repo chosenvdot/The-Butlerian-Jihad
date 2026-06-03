@@ -5,20 +5,23 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import AnimatedMasthead from '../components/AnimatedMasthead'
 import Ph from '../components/Placeholder'
+import PhotoFrame from '../components/PhotoFrame'
+import { frameDate, statsLabel, usePhotoLibrary } from '../photos'
 
 const H = HOUSE
 const D = VBDATA
 
 function PhotographyPreview() {
-  const photos = D.albums
+  const library = usePhotoLibrary(D)
+  const photos = library.albums
     .flatMap(a => a.photos)
-    .sort((x, y) => y[2].localeCompare(x[2]))
-  const frameLabel = `${photos.length} FRAMES \u00b7 ${D.albums.length} ALBUMS`
+    .sort((x, y) => frameDate(y).localeCompare(frameDate(x)))
+  const frameLabel = statsLabel(library)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 3, flex: 1, minHeight: 170 }}>
-        {photos.slice(0, 4).map((p, i) => <Ph key={i} label={p[0]} meta="" ticks={false} />)}
+        {photos.slice(0, 4).map((p, i) => <PhotoFrame key={p.id || i} frame={p} label="" caption={false} ticks={false} width={420} />)}
       </div>
       <span style={{ fontFamily: H.mono, fontSize: 11, color: H.muted }}>{frameLabel}</span>
     </div>

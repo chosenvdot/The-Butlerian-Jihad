@@ -11,7 +11,7 @@ const H = HOUSE
 
 // Per-section masthead metadata (accent dot + kicker + title + right-hand intro).
 const SECTION_META = {
-  photography: { accent: H.apple[0], kicker: 'GALLERY', title: 'Photography', intro: 'Albums and recent frames from the edges of the map. Full-resolution RAW available per frame.' },
+  photography: { accent: H.apple[0], kicker: 'GALLERY', title: 'Photography', intro: 'Recent frames, newest first.' },
   engineering: { accent: H.apple[5], kicker: 'CURRICULUM', title: 'Engineering', intro: 'Roles and details in progress.' },
   journal: { accent: H.apple[2], kicker: 'WRITING', title: 'Journal', intro: 'Field notes and engineering essays. The throughline is patience.' },
   contact: {
@@ -25,14 +25,12 @@ const SECTION_META = {
 
 export default function App() {
   const [view, setView] = useState('home') // home | photography | engineering | journal | contact
-  const [photoNav, setPhotoNav] = useState('hub') // hub | recents | albums | album:<id>
   const [journalNav, setJournalNav] = useState(null) // null | <index>
 
   // Every view change returns to the top.
-  useEffect(() => { window.scrollTo(0, 0) }, [view, photoNav, journalNav])
+  useEffect(() => { window.scrollTo(0, 0) }, [view, journalNav])
 
   const enter = k => {
-    if (k === 'photography') setPhotoNav('hub')
     if (k === 'journal') setJournalNav(null)
     setView(k)
   }
@@ -44,7 +42,7 @@ export default function App() {
 
   const meta = SECTION_META[view] || SECTION_META.photography
   const body = {
-    photography: <PhotoFlow nav={photoNav} setNav={setPhotoNav} />,
+    photography: <PhotoFlow />,
     engineering: <Engineering />,
     journal: <Journal journalNav={journalNav} setJournalNav={setJournalNav} />,
     contact: <Contact />,

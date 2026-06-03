@@ -1,0 +1,18 @@
+name = "victorbrasil-photos"
+main = "src/index.js"
+compatibility_date = "2026-06-02"
+workers_dev = true
+
+[triggers]
+crons = ["*/15 * * * *"]
+
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "photos"
+
+[images]
+binding = "IMAGES"
+
+[vars]
+# Comma-separated allowlist of site origins permitted to call this worker.
+ALLOWED_ORIGINS = "http://localhost:5173,http://localhost:5181,http://127.0.0.1:5173,http://127.0.0.1:5181,http://victorbr.com,https://victorbr.com,http://www.victorbr.com,https://www.victorbr.com,https://victorbrasil.chosenvictor12.workers.dev"
