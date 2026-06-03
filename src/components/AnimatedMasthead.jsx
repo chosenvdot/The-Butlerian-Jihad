@@ -92,35 +92,38 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
         <defs>
           <linearGradient id={uid + 'drawRainbow'} x1="0" y1="0" x2="1" y2="0">{stripeStops}</linearGradient>
           <clipPath id={uid + 'draw'}><rect ref={rectRef} x="-10" y="-70" width={phase === 1 ? 0 : W} height={Hh + 140} /></clipPath>
-          {audioBands.map((band, i) => (
-            <clipPath key={i} id={uid + 'audioBand' + i} clipPathUnits="userSpaceOnUse">
-              <rect x="-10" y={band.y - 1.25} width={W + 20} height={band.h + 2.5} />
-            </clipPath>
-          ))}
+          <mask id={uid + 'audioMask'} maskUnits="userSpaceOnUse" x="-10" y="-10" width={W + 20} height={Hh + 20}>
+            <rect x="-10" y="-10" width={W + 20} height={Hh + 20} fill="black" />
+            <text
+              x={cx}
+              y={audioY}
+              style={{
+                ...txt,
+                fontFamily: '"Audiowide", system-ui, sans-serif',
+                fontWeight: 400,
+                fontSize: audioFont,
+                letterSpacing: '0px',
+              }}
+              fill="white"
+            >
+              Victor Brasil
+            </text>
+          </mask>
         </defs>
         <text x={cx} y={serifY} style={{ ...txt, fontFamily: H.serif, fontWeight: 500, fontSize: 150, letterSpacing: '-2px', opacity: phase === 0 ? 1 : 0 }} fill={H.ink}>Victor Brasil</text>
         <text key={'cur' + phase} x={cx} y={cursiveY} clipPath={`url(#${uid}draw)`} style={{ ...txt, fontFamily: '"Sacramento", cursive', fontSize: 196, opacity: phase === 1 ? 1 : 0 }} fill={`url(#${uid}drawRainbow)`}>Victor Brasil</text>
         {phase === 2 && (
-          <g key={'aud' + phase}>
-            {audioBands.map(({ c }, i) => (
-              <text
+          <g key={'aud' + phase} className="vb-audio-wordmark" mask={`url(#${uid}audioMask)`}>
+            {audioBands.map(({ c, y, h }) => (
+              <rect
                 key={c}
-                x={cx}
-                y={audioY}
-                className="vb-audio-band"
-                clipPath={`url(#${uid}audioBand${i})`}
-                style={{
-                  ...txt,
-                  fontFamily: '"Audiowide", system-ui, sans-serif',
-                  fontWeight: 400,
-                  fontSize: audioFont,
-                  letterSpacing: '0px',
-                  animationDelay: (0.02 + i * 0.045) + 's',
-                }}
+                x="-10"
+                y={y}
+                width={W + 20}
+                height={h}
                 fill={c}
-              >
-                Victor Brasil
-              </text>
+                shapeRendering="crispEdges"
+              />
             ))}
           </g>
         )}

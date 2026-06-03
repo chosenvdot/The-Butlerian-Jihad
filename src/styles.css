@@ -97,16 +97,16 @@ details summary { list-style: none; }
 @keyframes vbFade { from { opacity: 0; } to { opacity: 1; } }
 .vb-fade { animation: vbFade .34s ease both; }
 
-@keyframes vbAudioBandDrop {
-  0% { opacity: 0; transform: translateY(-3px); }
-  60% { opacity: .98; }
-  100% { opacity: 1; transform: translateY(0); }
+@keyframes vbAudioMaskIn {
+  0% { opacity: 0; transform: translateY(5px) scaleX(.985); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scaleX(1); }
 }
-.vb-audio-band {
+.vb-audio-wordmark {
   opacity: 0;
   transform-box: fill-box;
-  transform-origin: center;
-  animation: vbAudioBandDrop 1.55s cubic-bezier(.16, .72, .22, 1) both;
+  transform-origin: center center;
+  animation: vbAudioMaskIn 1.25s cubic-bezier(.18, .78, .24, 1) both;
   will-change: opacity, transform;
 }
 
@@ -321,7 +321,7 @@ details summary { list-style: none; }
   .vb-photo, .vb-photo > *, .vb-cover > *, .vb-pane, .vb-home, .vb-navlink,
   .vb-brand-cycle > span, .vb-cv > summary, .vb-cv-plus { transition: none; }
   .vb-rise, .vb-fade { animation: none !important; }
-  .vb-audio-band { animation: none !important; opacity: 1; transform: none; }
+  .vb-audio-wordmark { animation: none !important; opacity: 1; transform: none; }
   .vb-brand-name { animation: none; opacity: 1; transform: none; }
   .vb-brand-avorant { animation: none; opacity: 0; transform: none; }
 }
