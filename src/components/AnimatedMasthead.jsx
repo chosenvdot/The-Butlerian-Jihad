@@ -65,6 +65,10 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
     <stop key={i + 'a'} offset={(i * 100 / A.length) + '%'} stopColor={c} />,
     <stop key={i + 'b'} offset={((i + 1) * 100 / A.length) + '%'} stopColor={c} />,
   ])
+  const audiowideStops = AUDIOWIDE_PALETTE.flatMap((c, i) => [
+    <stop key={i + 'a'} offset={(i * 100 / AUDIOWIDE_PALETTE.length) + '%'} stopColor={c} />,
+    <stop key={i + 'b'} offset={((i + 1) * 100 / AUDIOWIDE_PALETTE.length) + '%'} stopColor={c} />,
+  ])
 
   const txt = { textAnchor: 'middle', dominantBaseline: 'alphabetic', transition: 'opacity .6s ease' }
   const W = 1180, Hh = 230, cx = W / 2, by = 156
@@ -72,14 +76,6 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
   const cursiveY = by + 10
   const audioFont = 146
   const audioY = by + 11
-  const audioTop = audioY - 120
-  const audioBandTotal = 132
-  const audioBandWeights = AUDIOWIDE_PALETTE.map(() => 1)
-  const audioBandUnit = audioBandTotal / audioBandWeights.reduce((sum, n) => sum + n, 0)
-  const audioBands = AUDIOWIDE_PALETTE.map((c, i) => {
-    const y = audioTop + audioBandWeights.slice(0, i).reduce((sum, n) => sum + n, 0) * audioBandUnit
-    return { c, y, h: audioBandWeights[i] * audioBandUnit }
-  })
 
   return (
     <div style={{ textAlign: 'center', width: '100%', maxWidth: Math.round(size * 10.6), margin: '0 auto' }}>
@@ -88,38 +84,28 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
         style={{ width: '100%', maxWidth: Math.round(size * 10.6), height: 'auto', display: 'block', margin: '0 auto', overflow: 'visible', opacity: ready ? 1 : 0, transition: 'opacity .18s ease' }}>
         <defs>
           <linearGradient id={uid + 'drawRainbow'} x1="0" y1="0" x2="1" y2="0">{stripeStops}</linearGradient>
+          <linearGradient id={uid + 'audiowideBands'} x1="0" y1="0" x2="0" y2="1">{audiowideStops}</linearGradient>
           <clipPath id={uid + 'draw'}><rect ref={rectRef} x="-10" y="-70" width={phase === 1 ? 0 : W} height={Hh + 140} /></clipPath>
-          {audioBands.map((band, i) => (
-            <clipPath key={i} id={uid + 'audioBand' + i} clipPathUnits="userSpaceOnUse">
-              <rect x="-10" y={band.y - 0.75} width={W + 20} height={band.h + 1.5} />
-            </clipPath>
-          ))}
         </defs>
         <text x={cx} y={serifY} style={{ ...txt, fontFamily: H.serif, fontWeight: 500, fontSize: 150, letterSpacing: '-2px', opacity: phase === 0 ? 1 : 0 }} fill={H.ink}>Victor Brasil</text>
         <text key={'cur' + phase} x={cx} y={cursiveY} clipPath={`url(#${uid}draw)`} style={{ ...txt, fontFamily: '"Sacramento", cursive', fontSize: 196, opacity: phase === 1 ? 1 : 0 }} fill={`url(#${uid}drawRainbow)`}>Victor Brasil</text>
         {phase === 2 && (
-          <g key={'aud' + phase}>
-            {audioBands.map(({ c }, i) => (
-              <text
-                key={c}
-                x={cx}
-                y={audioY}
-                className="vb-audio-band"
-                clipPath={`url(#${uid}audioBand${i})`}
-                style={{
-                  ...txt,
-                  fontFamily: '"Audiowide", system-ui, sans-serif',
-                  fontWeight: 400,
-                  fontSize: audioFont,
-                  letterSpacing: '0px',
-                  animationDelay: (0.05 + i * 0.075) + 's'
-                }}
-                fill={c}
-              >
-                Victor Brasil
-              </text>
-            ))}
-          </g>
+          <text
+            key={'aud' + phase}
+            x={cx}
+            y={audioY}
+            className="vb-audio-band"
+            style={{
+              ...txt,
+              fontFamily: '"Audiowide", system-ui, sans-serif',
+              fontWeight: 400,
+              fontSize: audioFont,
+              letterSpacing: '0px',
+            }}
+            fill={`url(#${uid}audiowideBands)`}
+          >
+            Victor Brasil
+          </text>
         )}
       </svg>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 6 }}>
