@@ -3,6 +3,7 @@ import { HOUSE } from '../tokens'
 import Pops from './Pops'
 
 const PHASE_DURS = [5000, 4400, 3600]
+const AUDIOWIDE_PALETTE = ['#9b776d', '#9d5125', '#c1974d', '#d4dbd3', '#687061']
 
 export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
   const [phase, setPhase] = useState(0) // 0 serif · 1 cursive draw · 2 Audiowide
@@ -61,8 +62,8 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
 
   const A = H.apple
   const stripeStops = A.flatMap((c, i) => [
-    <stop key={i + 'a'} offset={(i * 100 / 6) + '%'} stopColor={c} />,
-    <stop key={i + 'b'} offset={((i + 1) * 100 / 6) + '%'} stopColor={c} />,
+    <stop key={i + 'a'} offset={(i * 100 / A.length) + '%'} stopColor={c} />,
+    <stop key={i + 'b'} offset={((i + 1) * 100 / A.length) + '%'} stopColor={c} />,
   ])
 
   const txt = { textAnchor: 'middle', dominantBaseline: 'alphabetic', transition: 'opacity .6s ease' }
@@ -73,9 +74,9 @@ export default function AnimatedMasthead({ H = HOUSE, size = 88 }) {
   const audioY = by + 11
   const audioTop = audioY - 120
   const audioBandTotal = 132
-  const audioBandWeights = [1.85, 1.04, 1, 1, 1, 1]
+  const audioBandWeights = AUDIOWIDE_PALETTE.map(() => 1)
   const audioBandUnit = audioBandTotal / audioBandWeights.reduce((sum, n) => sum + n, 0)
-  const audioBands = A.map((c, i) => {
+  const audioBands = AUDIOWIDE_PALETTE.map((c, i) => {
     const y = audioTop + audioBandWeights.slice(0, i).reduce((sum, n) => sum + n, 0) * audioBandUnit
     return { c, y, h: audioBandWeights[i] * audioBandUnit }
   })

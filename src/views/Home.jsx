@@ -20,21 +20,21 @@ function PhotographyPreview() {
 
   return (
     <div className="vb-home-photo-card">
-      <div className="vb-home-photo-grid">
-        {photos.slice(0, 4).map((p, i) => (
+      <div className="vb-home-photo-preview">
+        {photos.slice(0, 1).map((p, i) => (
           <PhotoFrame
             key={p.id || i}
             frame={p}
             label=""
             caption={false}
             ticks={false}
-            width={360}
+            width={960}
             fit="cover"
             gravity="auto"
-            quality={76}
-            ratio={1}
-            sizes="154px"
-            widths={[180, 360]}
+            quality={88}
+            ratio={4 / 3}
+            sizes="(max-width: 760px) 80vw, 308px"
+            widths={[720, 960, 1280]}
           />
         ))}
       </div>

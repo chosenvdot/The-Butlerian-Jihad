@@ -19,21 +19,17 @@ body {
   gap: 12px;
   flex: 1;
 }
-.vb-home-photo-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 5px;
-  aspect-ratio: 1 / 1;
+.vb-home-photo-preview {
+  display: block;
+  aspect-ratio: 4 / 3;
   width: 100%;
-  max-height: 320px;
   overflow: hidden;
   background: rgba(25, 19, 7, .08);
 }
-.vb-home-photo-grid .vb-frame-real {
+.vb-home-photo-preview .vb-frame-real {
   min-height: 0;
 }
-.vb-home-photo-grid .vb-frame-index {
+.vb-home-photo-preview .vb-frame-index {
   top: 7px;
   left: 7px;
   padding: 2px 5px;
