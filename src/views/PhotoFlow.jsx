@@ -16,6 +16,8 @@ const MIN_ZOOM = 1
 const MAX_ZOOM = 4
 const ZOOM_STEP = 0.5
 const CLICK_ZOOM = 2
+const SWIPE_MIN_DISTANCE = 52
+const SWIPE_MAX_VERTICAL_RATIO = 0.75
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value))
@@ -47,6 +49,8 @@ export default function PhotoFlow({ D = VBDATA }) {
   const stageRef = useRef(null)
   const imageRef = useRef(null)
   const zoomRef = useRef(MIN_ZOOM)
+  const touchSwipeRef = useRef(null)
+  const suppressTouchClickRef = useRef(false)
   const didDragRef = useRef(false)
   const library = usePhotoLibrary(D)
   const recents = library.albums
@@ -60,6 +64,7 @@ export default function PhotoFlow({ D = VBDATA }) {
     setDrag(null)
     setFitSize(null)
     setFullSourceFailed(false)
+    touchSwipeRef.current = null
     didDragRef.current = false
   }
 
@@ -71,6 +76,28 @@ export default function PhotoFlow({ D = VBDATA }) {
   function closeViewer() {
     setViewer(null)
     resetImageView()
+  }
+
+  function currentViewerIndex() {
+    if (!viewer) return -1
+    return recents.findIndex(photo => photo === viewer || (photo.id && photo.id === viewer.id))
+  }
+
+  function showPhotoAt(index) {
+    if (!recents.length) return
+    const nextIndex = (index + recents.length) % recents.length
+    setViewer(recents[nextIndex])
+    resetImageView()
+  }
+
+  function showPreviousPhoto() {
+    const index = currentViewerIndex()
+    showPhotoAt(index < 0 ? 0 : index - 1)
+  }
+
+  function showNextPhoto() {
+    const index = currentViewerIndex()
+    showPhotoAt(index < 0 ? 0 : index + 1)
   }
 
   function lightboxBounds() {
@@ -164,6 +191,11 @@ export default function PhotoFlow({ D = VBDATA }) {
   function handleImageClick(event) {
     event.stopPropagation()
 
+    if (suppressTouchClickRef.current) {
+      suppressTouchClickRef.current = false
+      return
+    }
+
     if (didDragRef.current) {
       didDragRef.current = false
       return
@@ -221,6 +253,62 @@ export default function PhotoFlow({ D = VBDATA }) {
     setDrag(null)
   }
 
+  function handleTouchStart(event) {
+    if (canPan() || event.touches.length !== 1) {
+      touchSwipeRef.current = null
+      return
+    }
+
+    const touch = event.touches[0]
+    touchSwipeRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    }
+    didDragRef.current = false
+  }
+
+  function handleTouchMove(event) {
+    const start = touchSwipeRef.current
+    if (!start || event.touches.length !== 1) return
+
+    const touch = event.touches[0]
+    const deltaX = touch.clientX - start.x
+    const deltaY = touch.clientY - start.y
+
+    if (Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      didDragRef.current = true
+      event.preventDefault()
+    }
+  }
+
+  function handleTouchEnd(event) {
+    const start = touchSwipeRef.current
+    touchSwipeRef.current = null
+    if (!start) return
+
+    const touch = event.changedTouches[0]
+    if (!touch) return
+
+    const deltaX = touch.clientX - start.x
+    const deltaY = touch.clientY - start.y
+    const isHorizontalSwipe = Math.abs(deltaX) >= SWIPE_MIN_DISTANCE && Math.abs(deltaY) <= Math.abs(deltaX) * SWIPE_MAX_VERTICAL_RATIO
+
+    if (!isHorizontalSwipe) return
+
+    event.preventDefault()
+    didDragRef.current = true
+    suppressTouchClickRef.current = true
+    window.setTimeout(() => {
+      suppressTouchClickRef.current = false
+    }, 350)
+
+    if (deltaX < 0) {
+      showNextPhoto()
+    } else {
+      showPreviousPhoto()
+    }
+  }
+
   function handleWheel(event) {
     event.preventDefault()
     event.stopPropagation()
@@ -240,6 +328,18 @@ export default function PhotoFlow({ D = VBDATA }) {
     function handleKeyDown(event) {
       if (event.key === 'Escape') {
         closeViewer()
+        return
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        showPreviousPhoto()
+        return
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        showNextPhoto()
         return
       }
 
@@ -310,6 +410,7 @@ export default function PhotoFlow({ D = VBDATA }) {
     const detail = frameMeta(viewer)
     const zoomed = zoom > MIN_ZOOM
     const pannable = canPan()
+    const hasNavigation = recents.length > 1
     const stageClassName = [
       'vb-lightbox-stage',
       pannable ? 'vb-lightbox-pannable' : '',
@@ -321,6 +422,12 @@ export default function PhotoFlow({ D = VBDATA }) {
     return (
       <div className="vb-lightbox" role="dialog" aria-modal="true" aria-label="Expanded photo" onClick={closeViewer}>
         <button className="vb-lightbox-close" type="button" aria-label="Close expanded photo" onClick={closeViewer}>x</button>
+        {hasNavigation && (
+          <>
+            <button className="vb-lightbox-nav vb-lightbox-prev" type="button" aria-label="Previous photo" onClick={event => { event.stopPropagation(); showPreviousPhoto() }}>&lt;</button>
+            <button className="vb-lightbox-nav vb-lightbox-next" type="button" aria-label="Next photo" onClick={event => { event.stopPropagation(); showNextPhoto() }}>&gt;</button>
+          </>
+        )}
         <div className="vb-lightbox-toolbar" aria-label="Photo zoom controls" onClick={event => event.stopPropagation()}>
           <button className="vb-lightbox-tool" type="button" aria-label="Zoom out" disabled={zoom <= MIN_ZOOM} onClick={zoomOut}>-</button>
           <span className="vb-lightbox-zoom-readout" aria-live="polite">{Math.round(zoom * 100)}%</span>
@@ -335,6 +442,10 @@ export default function PhotoFlow({ D = VBDATA }) {
             else event.stopPropagation()
           }}
           onWheel={handleWheel}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={() => { touchSwipeRef.current = null }}
           style={{
             '--vb-lightbox-zoom': zoom,
             '--vb-lightbox-pan-x': `${pan.x}px`,
