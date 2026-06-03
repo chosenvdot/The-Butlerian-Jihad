@@ -45,6 +45,10 @@ export default {
         return sourceResponse(request, env)
       }
 
+      if (url.pathname.startsWith('/full/')) {
+        return fullResponse(request, env, cors)
+      }
+
       if (url.pathname.startsWith('/image/')) {
         return imageResponse(request, env, cors)
       }
@@ -420,7 +424,7 @@ async function imageResponse(request, env, cors) {
 
   const width = clampInt(url.searchParams.get('w'), 160, 12000, 1200)
   const height = clampInt(url.searchParams.get('h'), 0, 12000, 0)
-  const quality = clampInt(url.searchParams.get('q'), 55, 92, 82)
+  const quality = clampInt(url.searchParams.get('q'), 55, 98, 82)
   const fit = imageFit(url.searchParams.get('fit'))
   const gravity = imageGravity(url.searchParams.get('g') || url.searchParams.get('gravity'), fit)
 
@@ -475,6 +479,35 @@ async function sourceResponse(request, env) {
       'Cache-Control': 'no-store',
     },
   })
+}
+
+async function fullResponse(request, env, cors) {
+  const url = new URL(request.url)
+  const encoded = url.pathname.slice('/full/'.length)
+  const key = decodeKey(encoded)
+  const ext = extension(key)
+
+  if (!DISPLAYABLE_EXT.has(ext)) {
+    return json({ error: 'full source format is not browser-displayable' }, 415, cors)
+  }
+
+  const manifest = await loadMetadataManifest(env.PHOTOS)
+  const metadata = manifest.entries[key]
+  if (metadata && metadata.gpsFound) {
+    return json({ error: 'full source unavailable for gps-bearing image' }, 403, cors)
+  }
+
+  const object = await env.PHOTOS.get(key)
+  if (!object) return json({ error: 'image not found' }, 404, cors)
+
+  const headers = new Headers(cors)
+  headers.set('Content-Type', object.httpMetadata && object.httpMetadata.contentType ? object.httpMetadata.contentType : contentTypeForExtension(ext))
+  headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+  headers.set('Content-Disposition', 'inline')
+  headers.set('X-Content-Type-Options', 'nosniff')
+  if (object.size) headers.set('Content-Length', String(object.size))
+
+  return new Response(object.body, { headers })
 }
 
 function shapeFrame(object, origin, metadataManifest) {
@@ -575,6 +608,13 @@ function sortableDate(value) {
 function extension(key) {
   const match = String(key).toLowerCase().match(/\.([a-z0-9]+)$/)
   return match ? match[1] : ''
+}
+
+function contentTypeForExtension(ext) {
+  if (ext === 'jpg' || ext === 'jpeg') return 'image/jpeg'
+  if (ext === 'png') return 'image/png'
+  if (ext === 'webp') return 'image/webp'
+  return 'application/octet-stream'
 }
 
 function normalizeCaptureDate(value) {

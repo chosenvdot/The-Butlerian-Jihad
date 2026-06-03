@@ -108,8 +108,19 @@ export function frameSrc(frame, width = 960, options = {}) {
 }
 
 export function frameFullSrc(frame) {
+  return frameOriginalSrc(frame) || frameFullFallbackSrc(frame)
+}
+
+export function frameFullFallbackSrc(frame) {
   if (!frame || Array.isArray(frame) || !frame.image) return null
-  return imageUrl(frame.image, { w: 12000, q: 92, fit: 'scale-down' })
+  return imageUrl(frame.image, { w: 12000, q: 98, fit: 'scale-down' })
+}
+
+function frameOriginalSrc(frame) {
+  if (!frame || Array.isArray(frame)) return null
+  if (frame.full) return frame.full
+  if (frame.id) return absoluteUrl(`/full/${frame.id}`)
+  return null
 }
 
 export function frameSrcSet(frame, options = {}) {
